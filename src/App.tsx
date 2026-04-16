@@ -7,6 +7,7 @@ import { CalendarProvider } from './contexts/CalendarContext'
 import { ProtectedRoute } from './components/shared/ProtectedRoute'
 import { AppShell } from './components/layout/AppShell'
 import { AuthPage } from './pages/AuthPage'
+import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { TodayPage } from './pages/TodayPage'
 import { GoalsPage } from './pages/GoalsPage'
 import { ProgressPage } from './pages/ProgressPage'
@@ -31,6 +32,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route
         path="/*"
         element={

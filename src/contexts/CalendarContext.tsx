@@ -50,9 +50,23 @@ const msalInstance = msClientId
     })
   : null
 
-function InnerProvider({ children }: { children: ReactNode }) {
-  const [googleToken, setGoogleToken]     = useState(() => localStorage.getItem(GCAL_TOKEN_KEY) ?? '')
-  const [googleEmail, setGoogleEmail]     = useState(() => localStorage.getItem(GCAL_EMAIL_KEY) ?? '')
+interface InnerProviderProps {
+  children: ReactNode
+  connectGoogle: () => void
+  googleToken: string
+  setGoogleToken: (t: string) => void
+  googleEmail: string
+  setGoogleEmail: (e: string) => void
+}
+
+function InnerProvider({
+  children,
+  connectGoogle,
+  googleToken,
+  setGoogleToken,
+  googleEmail,
+  setGoogleEmail,
+}: InnerProviderProps) {
   const [googleMode, setGoogleModeState]  = useState<CalMode>(() => (localStorage.getItem(GCAL_MODE_KEY) as CalMode) ?? 'read')
   const [msToken, setMsToken]             = useState(() => localStorage.getItem(MSCAL_TOKEN_KEY) ?? '')
   const [msEmail, setMsEmail]             = useState(() => localStorage.getItem(MSCAL_EMAIL_KEY) ?? '')
@@ -62,19 +76,6 @@ function InnerProvider({ children }: { children: ReactNode }) {
 
   const googleConnected    = !!googleToken
   const microsoftConnected = !!msToken
-
-  const googleLogin = useGoogleLogin({
-    scope: 'https://www.googleapis.com/auth/calendar',
-    onSuccess: async (res) => {
-      const token = res.access_token
-      localStorage.setItem(GCAL_TOKEN_KEY, token)
-      setGoogleToken(token)
-      const email = await fetchGoogleUserEmail(token).catch(() => '')
-      localStorage.setItem(GCAL_EMAIL_KEY, email)
-      setGoogleEmail(email)
-    },
-    onError: (err) => console.error('Google login error', err),
-  })
 
   function disconnectGoogle() {
     localStorage.removeItem(GCAL_TOKEN_KEY)
@@ -147,12 +148,12 @@ function InnerProvider({ children }: { children: ReactNode }) {
       microsoftAvailable: !!msClientId,
       microsoftConnected, microsoftEmail: msEmail, microsoftMode: msMode,
       events, loadingEvents,
-      connectGoogle: googleLogin,
+      connectGoogle,
       disconnectGoogle,
       setGoogleMode,
       connectMicrosoft,
       disconnectMicrosoft,
-      setMicrosoftMode: setMicrosoftMode,
+      setMicrosoftMode,
       fetchEventsForDate,
     }}>
       {children}
@@ -160,14 +161,54 @@ function InnerProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Must render inside GoogleOAuthProvider — owns the Google token state
+function GoogleCalendarProvider({ children }: { children: ReactNode }) {
+  const [googleToken, setGoogleToken] = useState(() => localStorage.getItem(GCAL_TOKEN_KEY) ?? '')
+  const [googleEmail, setGoogleEmail] = useState(() => localStorage.getItem(GCAL_EMAIL_KEY) ?? '')
+
+  const login = useGoogleLogin({
+    scope: 'https://www.googleapis.com/auth/calendar',
+    onSuccess: async (res) => {
+      const token = res.access_token
+      localStorage.setItem(GCAL_TOKEN_KEY, token)
+      setGoogleToken(token)
+      const email = await fetchGoogleUserEmail(token).catch(() => '')
+      localStorage.setItem(GCAL_EMAIL_KEY, email)
+      setGoogleEmail(email)
+    },
+    onError: (err) => console.error('Google login error', err),
+  })
+
+  return (
+    <InnerProvider
+      connectGoogle={login}
+      googleToken={googleToken}
+      setGoogleToken={setGoogleToken}
+      googleEmail={googleEmail}
+      setGoogleEmail={setGoogleEmail}
+    >
+      {children}
+    </InnerProvider>
+  )
+}
+
 export function CalendarProvider({ children }: { children: ReactNode }) {
   if (!googleClientId) {
-    // No Google client ID configured — still render with Microsoft-only support
-    return <InnerProvider>{children}</InnerProvider>
+    return (
+      <InnerProvider
+        connectGoogle={() => {}}
+        googleToken=""
+        setGoogleToken={() => {}}
+        googleEmail=""
+        setGoogleEmail={() => {}}
+      >
+        {children}
+      </InnerProvider>
+    )
   }
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <InnerProvider>{children}</InnerProvider>
+      <GoogleCalendarProvider>{children}</GoogleCalendarProvider>
     </GoogleOAuthProvider>
   )
 }

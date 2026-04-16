@@ -38,7 +38,7 @@ export function LoginForm({ onSwitch }: Props) {
     setError('')
     setLoading(true)
     const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/auth',
+      redirectTo: window.location.origin + '/reset-password',
     })
     if (err) setError(friendlyError(err.message))
     else setResetSent(true)
