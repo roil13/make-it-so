@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#1A2E1C"/>
+  <!-- Inner circle -->
+  <circle cx="256" cy="256" r="210" fill="#243B2A"/>
+  <!-- Zap / lightning bolt (centered) -->
+  <path d="M290 96 L180 276 L248 276 L222 416 L332 236 L264 236 Z"
+        fill="#48CAE4" stroke="#48CAE4" stroke-width="4" stroke-linejoin="round"/>
+</svg>

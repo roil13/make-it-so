@@ -10,6 +10,8 @@ interface HabitData {
   target_value: number | null
   target_unit: string | null
   current_target: number | null
+  scheduled_time: string | null
+  duration_minutes: number | null
 }
 
 interface Props {
@@ -29,6 +31,8 @@ export function HabitForm({ goals, initial, onSubmit, onCancel }: Props) {
   const [targetValue, setTargetValue] = useState(initial?.target_value?.toString() ?? '')
   const [targetUnit, setTargetUnit] = useState(initial?.target_unit ?? '')
   const [currentTarget, setCurrentTarget] = useState(initial?.current_target?.toString() ?? '')
+  const [scheduleTime, setScheduleTime] = useState(initial?.scheduled_time?.slice(0, 5) ?? '')
+  const [duration, setDuration] = useState(initial?.duration_minutes?.toString() ?? '30')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -43,9 +47,11 @@ export function HabitForm({ goals, initial, onSubmit, onCancel }: Props) {
     try {
       await onSubmit({
         goal_id, title, description, priority,
-        target_value:   trackTarget ? Number(targetValue)   : null,
-        target_unit:    trackTarget ? targetUnit            : null,
-        current_target: trackTarget ? Number(currentTarget) : null,
+        target_value:     trackTarget ? Number(targetValue)   : null,
+        target_unit:      trackTarget ? targetUnit            : null,
+        current_target:   trackTarget ? Number(currentTarget) : null,
+        scheduled_time:   scheduleTime ? `${scheduleTime}:00` : null,
+        duration_minutes: scheduleTime ? Number(duration) : null,
       })
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to save')
@@ -126,6 +132,21 @@ export function HabitForm({ goals, initial, onSubmit, onCancel }: Props) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Schedule */}
+      <div className="border border-border rounded-lg p-3 space-y-3">
+        <p className="text-foreground text-sm font-bold">Schedule (optional)</p>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-muted text-xs uppercase tracking-widest mb-1">Time</label>
+            <input type="time" className={field} value={scheduleTime} onChange={(e) => setScheduleTime(e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-muted text-xs uppercase tracking-widest mb-1">Duration (min)</label>
+            <input type="number" min={5} max={480} step={5} className={field} value={duration} onChange={(e) => setDuration(e.target.value)} />
+          </div>
+        </div>
       </div>
 
       {error && <p className="text-danger text-sm">{error}</p>}

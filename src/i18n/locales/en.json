@@ -2,6 +2,7 @@
   "nav": {
     "today": "Today",
     "goals": "Goals",
+    "schedule": "Schedule",
     "progress": "Progress",
     "manage": "Manage"
   },

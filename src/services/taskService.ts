@@ -1,7 +1,11 @@
 import { supabase } from '../supabase/client'
 import type { Task } from '../types'
 
-type TaskInput = Pick<Task, 'project_id' | 'title' | 'description' | 'order_index'>
+type TaskInput = Pick<Task, 'project_id' | 'title' | 'description' | 'order_index'> & {
+  scheduled_time?: string | null
+  duration_minutes?: number | null
+  due_date?: string | null
+}
 
 export async function createTask(userId: string, input: TaskInput): Promise<void> {
   const { error } = await supabase.from('tasks').insert({ ...input, user_id: userId })

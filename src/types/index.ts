@@ -25,6 +25,8 @@ export interface Habit {
   target_value: number | null
   target_unit: string | null
   current_target: number | null
+  scheduled_time: string | null    // "HH:MM:SS"
+  duration_minutes: number | null
   created_at: string
   updated_at: string
 }
@@ -59,8 +61,31 @@ export interface Task {
   status: 'todo' | 'in_progress' | 'done'
   order_index: number
   completed_at: string | null
+  scheduled_time: string | null    // "HH:MM:SS"
+  duration_minutes: number | null
+  due_date: string | null          // ISO date
   created_at: string
   updated_at: string
+}
+
+export interface ScheduleOverride {
+  id: string
+  user_id: string
+  item_type: 'habit' | 'task'
+  item_id: string
+  override_date: string  // ISO date
+  start_time: string     // "HH:MM:SS"
+  duration_minutes: number
+  created_at: string
+}
+
+export interface CalendarEvent {
+  id: string
+  title: string
+  start: string   // ISO datetime
+  end: string     // ISO datetime
+  provider: 'google' | 'microsoft'
+  color: string
 }
 
 // Derived type used in scoring

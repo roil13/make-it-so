@@ -5,6 +5,8 @@ type HabitInput = Pick<Habit, 'goal_id' | 'title' | 'description' | 'priority'> 
   target_value?: number | null
   target_unit?: string | null
   current_target?: number | null
+  scheduled_time?: string | null
+  duration_minutes?: number | null
 }
 
 export async function createHabit(userId: string, input: HabitInput): Promise<void> {

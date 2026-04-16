@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Zap, Target, BarChart2, Settings } from 'lucide-react'
+import { Zap, Target, BarChart2, Settings, CalendarDays } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 
@@ -7,10 +7,11 @@ export function Sidebar() {
   const { t } = useTranslation()
 
   const nav = [
-    { to: '/today', icon: Zap, label: t('nav.today') },
-    { to: '/goals', icon: Target, label: t('nav.goals') },
-    { to: '/progress', icon: BarChart2, label: t('nav.progress') },
-    { to: '/manage', icon: Settings, label: t('nav.manage') },
+    { to: '/today',    icon: Zap,          label: t('nav.today') },
+    { to: '/goals',    icon: Target,       label: t('nav.goals') },
+    { to: '/schedule', icon: CalendarDays, label: t('nav.schedule') },
+    { to: '/progress', icon: BarChart2,    label: t('nav.progress') },
+    { to: '/manage',   icon: Settings,     label: t('nav.manage') },
   ]
 
   return (

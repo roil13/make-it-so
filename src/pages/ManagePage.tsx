@@ -63,7 +63,7 @@ export function ManagePage() {
     await refetch()
   }
 
-  async function handleHabitSubmit(data: { goal_id: string; title: string; description: string; priority: number; target_value: number | null; target_unit: string | null; current_target: number | null }) {
+  async function handleHabitSubmit(data: { goal_id: string; title: string; description: string; priority: number; target_value: number | null; target_unit: string | null; current_target: number | null; scheduled_time: string | null; duration_minutes: number | null }) {
     if (!user) return
     if (editingHabit) await updateHabit(editingHabit.id, data)
     else await createHabit(user.id, data)
@@ -79,11 +79,10 @@ export function ManagePage() {
     await refetch()
   }
 
-  async function handleTaskSubmit(data: { project_id: string; title: string; description: string; order_index: number }) {
+  async function handleTaskSubmit(data: { project_id: string; title: string; description: string; order_index: number; scheduled_time: string | null; duration_minutes: number | null; due_date: string | null }) {
     if (!user) return
     if (editingTask) await updateTask(editingTask.id, data)
     else {
-      // Auto-assign order_index as next in project
       const projectTasks = tasks.filter((t) => t.project_id === data.project_id)
       const nextIndex = projectTasks.length
       await createTask(user.id, { ...data, order_index: nextIndex })
