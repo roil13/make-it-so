@@ -4,7 +4,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { TimeBlock, type TimeBlockData } from './TimeBlock'
 import type { CalendarEvent } from '../../types'
 
-const START_HOUR = 6    // 6 AM
+const START_HOUR = 0    // midnight
 const END_HOUR   = 24   // midnight
 const TOTAL_HOURS = END_HOUR - START_HOUR
 const HOUR_HEIGHT = 64  // px
@@ -64,7 +64,7 @@ export function DayTimeline({ blocks, unscheduled, onReschedule }: Props) {
                 style={{ top: i * HOUR_HEIGHT }}
               >
                 <span className="text-[10px] text-muted w-10 pl-1 -translate-y-2 select-none">
-                  {hour === 12 ? '12 PM' : hour < 12 ? `${hour} AM` : `${hour - 12} PM`}
+                  {`${String(hour).padStart(2, '0')}:00`}
                 </span>
               </div>
             )

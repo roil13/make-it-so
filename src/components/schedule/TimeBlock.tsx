@@ -69,7 +69,5 @@ export function TimeBlock({ block, startHour }: Props) {
 function formatMinutes(totalMinutes: number): string {
   const h = Math.floor(totalMinutes / 60) % 24
   const m = totalMinutes % 60
-  const ampm = h >= 12 ? 'PM' : 'AM'
-  const h12 = h % 12 || 12
-  return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
