@@ -15,6 +15,7 @@ export default {
         'on-accent':    '#1A2E1C',
         muted:          '#8FB89A',
         success:        '#52B788',
+        warning:        '#F4A261',
         danger:         '#D96250',
         water:          '#48CAE4',
         'water-hover':  '#00B4D8',
