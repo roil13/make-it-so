@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__pause_project",
+      "mcp__claude_ai_Supabase__get_cost",
+      "mcp__claude_ai_Supabase__confirm_cost",
+      "mcp__claude_ai_Supabase__create_project",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "Bash(npm uninstall:*)",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(pkill -f \"vite\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(xargs ls *)",
+      "Bash(grep -r \"dir\\\\|lang\\\\|rtl\\\\|ltr\" /c/Dev/task-manager/*.html /c/Dev/task-manager/src --include=\"*.tsx\" --include=\"*.ts\")",
+      "Bash(find /c/Dev/task-manager/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) ! -path \"*/node_modules/*\" -exec wc -l {} +)",
+      "Bash(npm run *)",
+      "mcp__claude_ai_Supabase__list_organizations",
+      "Bash(ls -la \"C:\\\\\\\\Dev\\\\\\\\task-manager\\\\\\\\\")",
+      "Bash(find C:\\\\\\\\Dev\\\\\\\\task-manager *)",
+      "Bash(find \"C:\\\\\\\\Dev\\\\\\\\task-manager/dist\" -type f -name \"*.png\" -o -name \"*icon*\" -o -name \"*manifest*\")",
+      "Bash(ls -lah \"C:\\\\\\\\Dev\\\\\\\\task-manager/dist/\")",
+      "Bash(grep *)",
+      "Bash(find \"C:\\\\\\\\Dev\\\\\\\\task-manager/src\" -name \"*.tsx\" -o -name \"*.ts\")",
+      "Bash(ls *)"
+    ]
+  }
+}

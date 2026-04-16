@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "today": "היום",
+    "goals": "מטרות",
+    "progress": "התקדמות",
+    "manage": "ניהול"
+  },
+  "topbar": {
+    "signOut": "התנתק"
+  },
+  "auth": {
+    "appTagline": "עצב את המציאות שלך. עכשיו.",
+    "signIn": "כניסה",
+    "createAccount": "יצירת חשבון",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "signingIn": "מתחבר...",
+    "creatingAccount": "יוצר חשבון...",
+    "makeItSo": "כן, זה קורה",
+    "noAccount": "אין חשבון?",
+    "signUp": "הירשם",
+    "haveAccount": "כבר יש לך חשבון?",
+    "signInLink": "כניסה"
+  },
+  "today": {
+    "heading": "היום",
+    "allHabits": "כל ההרגלים",
+    "projectTasks": "משימות פרויקט",
+    "doIt": "בצע",
+    "done": "בוצע",
+    "undo": "בטל",
+    "somethingWentWrong": "משהו השתבש"
+  },
+  "banner": {
+    "missionComplete": "המשימה הושלמה",
+    "missionCompleteBody": "סיימת הכל להיום. חזור מחר.",
+    "noHabitsYet": "אין מה לעשות עדיין",
+    "noHabitsBody": "עבור לניהול כדי להוסיף הרגלים או ליצור פרויקט.",
+    "makeItSo": "כן, זה קורה"
+  },
+  "goals": {
+    "heading": "מטרות חיים",
+    "noGoals": "אין עדיין מטרות",
+    "noGoalsDescription": "עבור לניהול כדי ליצור את המטרה הראשונה שלך.",
+    "todayCount": "{{done}}/{{total}} היום",
+    "noHabitsLinked": "אין הרגלים מקושרים למטרה זו עדיין.",
+    "habitGoals": "מטרות הרגלים",
+    "projectGoals": "מטרות פרויקט"
+  },
+  "progress": {
+    "heading": "התקדמות",
+    "noData": "אין עדיין נתונים",
+    "noDataDescription": "הוסף הרגלים והתחל לתעד כדי לראות את ההתקדמות שלך כאן.",
+    "heatmaps": "מפות חום של הרגלים",
+    "weeklyRate": "אחוז השלמה שבועי",
+    "allTimeRate": "אחוז השלמה כולל",
+    "completion": "השלמה",
+    "rate": "אחוז"
+  },
+  "manage": {
+    "heading": "ניהול",
+    "addGoal": "הוסף מטרה",
+    "addHabit": "הוסף הרגל",
+    "addProject": "הוסף פרויקט",
+    "addTask": "הוסף משימה",
+    "goals": "מטרות",
+    "habits": "הרגלים",
+    "projects": "פרויקטים",
+    "tasks": "משימות",
+    "noGoals": "אין עדיין מטרות",
+    "noGoalsDescription": "צור את המטרה הראשונה שלך.",
+    "noHabits": "אין עדיין הרגלים",
+    "noHabitsDescription": "הוסף הרגל המקושר לאחת המטרות שלך.",
+    "noProjects": "אין עדיין פרויקטים",
+    "noProjectsDescription": "צור פרויקט המקושר למטרת פרויקט.",
+    "noTasks": "אין עדיין משימות",
+    "noTasksDescription": "הוסף משימות לפרויקטים שלך.",
+    "deleteGoalConfirm": "למחוק מטרה זו?",
+    "deleteHabitConfirm": "למחוק הרגל זה?",
+    "deleteProjectConfirm": "למחוק פרויקט זה?",
+    "deleteTaskConfirm": "למחוק משימה זו?"
+  },
+  "goalForm": {
+    "newGoal": "מטרה חדשה",
+    "editGoal": "עריכת מטרה",
+    "goalType": "סוג מטרה",
+    "dailyHabits": "הרגלים יומיים",
+    "project": "פרויקט",
+    "title": "כותרת",
+    "description": "תיאור",
+    "category": "קטגוריה",
+    "color": "צבע",
+    "priority": "עדיפות (1–5)",
+    "low": "נמוכה",
+    "high": "גבוהה",
+    "save": "שמור מטרה",
+    "saving": "שומר...",
+    "cancel": "ביטול",
+    "failedToSave": "שמירה נכשלה"
+  },
+  "habitForm": {
+    "newHabit": "הרגל חדש",
+    "editHabit": "עריכת הרגל",
+    "goal": "מטרה",
+    "selectGoal": "בחר מטרה...",
+    "title": "כותרת ההרגל",
+    "titlePlaceholder": "למשל: אימון בוקר",
+    "description": "תיאור",
+    "priority": "עדיפות (1–5)",
+    "low": "נמוכה",
+    "high": "גבוהה",
+    "save": "שמור הרגל",
+    "saving": "שומר...",
+    "cancel": "ביטול",
+    "selectGoalFirst": "בחר מטרה תחילה",
+    "failedToSave": "שמירה נכשלה"
+  },
+  "projectForm": {
+    "newProject": "פרויקט חדש",
+    "editProject": "עריכת פרויקט",
+    "goal": "מטרה",
+    "selectGoal": "בחר מטרה...",
+    "title": "כותרת הפרויקט",
+    "description": "תיאור",
+    "taskOrder": "סדר משימות",
+    "inOrder": "לפי סדר",
+    "inOrderDesc": "השלם משימות אחת אחרי השנייה",
+    "anyOrder": "כל סדר",
+    "anyOrderDesc": "השלם משימות בכל סדר שתרצה",
+    "save": "שמור פרויקט",
+    "saving": "שומר...",
+    "cancel": "ביטול",
+    "selectGoalFirst": "בחר מטרה תחילה",
+    "failedToSave": "שמירה נכשלה"
+  },
+  "taskForm": {
+    "newTask": "משימה חדשה",
+    "editTask": "עריכת משימה",
+    "project": "פרויקט",
+    "selectProject": "בחר פרויקט...",
+    "title": "כותרת המשימה",
+    "titlePlaceholder": "למשל: כתיבת תקציר הפרויקט",
+    "description": "תיאור",
+    "save": "שמור משימה",
+    "saving": "שומר...",
+    "cancel": "ביטול",
+    "selectProjectFirst": "בחר פרויקט תחילה",
+    "failedToSave": "שמירה נכשלה"
+  },
+  "goalList": {
+    "priorityLabel": "עדיפות {{value}}",
+    "habits": "הרגלים",
+    "project": "פרויקט"
+  },
+  "habitList": {
+    "unknownGoal": "מטרה לא ידועה",
+    "priorityLabel": "עדיפות {{value}}"
+  },
+  "projectList": {
+    "tasksCount": "{{done}}/{{total}} משימות",
+    "sequential": "לפי סדר",
+    "any": "כל סדר"
+  }
+}

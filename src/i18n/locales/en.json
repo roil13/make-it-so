@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "today": "Today",
+    "goals": "Goals",
+    "progress": "Progress",
+    "manage": "Manage"
+  },
+  "topbar": {
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "appTagline": "Shape your reality. Right now.",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account...",
+    "makeItSo": "Make it So",
+    "noAccount": "No account?",
+    "signUp": "Sign up",
+    "haveAccount": "Already have an account?",
+    "signInLink": "Sign in"
+  },
+  "today": {
+    "heading": "Today",
+    "allHabits": "All Habits",
+    "projectTasks": "Project Tasks",
+    "doIt": "Do it",
+    "done": "Done",
+    "undo": "Undo",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "banner": {
+    "missionComplete": "Mission Complete",
+    "missionCompleteBody": "You've done everything for today. Come back tomorrow.",
+    "noHabitsYet": "Nothing to do yet",
+    "noHabitsBody": "Go to Manage to add habits or create a project.",
+    "makeItSo": "Make it So"
+  },
+  "goals": {
+    "heading": "Life Goals",
+    "noGoals": "No goals yet",
+    "noGoalsDescription": "Go to Manage to create your first life goal.",
+    "todayCount": "{{done}}/{{total}} today",
+    "noHabitsLinked": "No habits linked to this goal yet.",
+    "habitGoals": "Habit Goals",
+    "projectGoals": "Project Goals"
+  },
+  "progress": {
+    "heading": "Progress",
+    "noData": "No data yet",
+    "noDataDescription": "Add habits and start logging to see your progress here.",
+    "heatmaps": "Habit Heatmaps",
+    "weeklyRate": "Weekly Completion Rate",
+    "allTimeRate": "All-time Completion Rate",
+    "completion": "Completion",
+    "rate": "Rate"
+  },
+  "manage": {
+    "heading": "Manage",
+    "addGoal": "Add Goal",
+    "addHabit": "Add Habit",
+    "addProject": "Add Project",
+    "addTask": "Add Task",
+    "goals": "Goals",
+    "habits": "Habits",
+    "projects": "Projects",
+    "tasks": "Tasks",
+    "noGoals": "No goals yet",
+    "noGoalsDescription": "Create your first life goal.",
+    "noHabits": "No habits yet",
+    "noHabitsDescription": "Add a habit linked to one of your goals.",
+    "noProjects": "No projects yet",
+    "noProjectsDescription": "Create a project linked to a project-type goal.",
+    "noTasks": "No tasks yet",
+    "noTasksDescription": "Add tasks to your projects.",
+    "deleteGoalConfirm": "Delete this goal?",
+    "deleteHabitConfirm": "Delete this habit?",
+    "deleteProjectConfirm": "Delete this project?",
+    "deleteTaskConfirm": "Delete this task?"
+  },
+  "goalForm": {
+    "newGoal": "New Goal",
+    "editGoal": "Edit Goal",
+    "goalType": "Goal Type",
+    "dailyHabits": "Daily Habits",
+    "project": "Project",
+    "title": "Title",
+    "description": "Description",
+    "category": "Category",
+    "color": "Color",
+    "priority": "Priority (1–5)",
+    "low": "Low",
+    "high": "High",
+    "save": "Save Goal",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "failedToSave": "Failed to save"
+  },
+  "habitForm": {
+    "newHabit": "New Habit",
+    "editHabit": "Edit Habit",
+    "goal": "Goal",
+    "selectGoal": "Select a goal...",
+    "title": "Habit Title",
+    "titlePlaceholder": "e.g. Morning workout",
+    "description": "Description",
+    "priority": "Priority (1–5)",
+    "low": "Low",
+    "high": "High",
+    "save": "Save Habit",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "selectGoalFirst": "Select a goal first",
+    "failedToSave": "Failed to save"
+  },
+  "projectForm": {
+    "newProject": "New Project",
+    "editProject": "Edit Project",
+    "goal": "Goal",
+    "selectGoal": "Select a goal...",
+    "title": "Project Title",
+    "description": "Description",
+    "taskOrder": "Task Order",
+    "inOrder": "In Order",
+    "inOrderDesc": "Complete tasks one by one in sequence",
+    "anyOrder": "Any Order",
+    "anyOrderDesc": "Complete tasks in any order",
+    "save": "Save Project",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "selectGoalFirst": "Select a goal first",
+    "failedToSave": "Failed to save"
+  },
+  "taskForm": {
+    "newTask": "New Task",
+    "editTask": "Edit Task",
+    "project": "Project",
+    "selectProject": "Select a project...",
+    "title": "Task Title",
+    "titlePlaceholder": "e.g. Write project brief",
+    "description": "Description",
+    "save": "Save Task",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "selectProjectFirst": "Select a project first",
+    "failedToSave": "Failed to save"
+  },
+  "goalList": {
+    "priorityLabel": "Priority {{value}}",
+    "habits": "Habits",
+    "project": "Project"
+  },
+  "habitList": {
+    "unknownGoal": "Unknown goal",
+    "priorityLabel": "Priority {{value}}"
+  },
+  "projectList": {
+    "tasksCount": "{{done}}/{{total}} tasks",
+    "sequential": "In order",
+    "any": "Any order"
+  }
+}

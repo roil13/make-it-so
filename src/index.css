@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Heebo', system-ui, sans-serif;
+    background-color: #1A2E1C;
+    color: #E8F5E1;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1A2E1C;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2D5A35;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3D7A45;
+  }
+
+  select option {
+    background: #243B2A;
+    color: #E8F5E1;
+  }
+}
