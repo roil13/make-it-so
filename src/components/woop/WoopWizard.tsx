@@ -262,6 +262,7 @@ function StepWish({ form, updateForm }: { form: FormState; updateForm: (p: Parti
         value={form.title}
         onChange={(e) => updateForm({ title: e.target.value })}
         placeholder={t('woop.wishPlaceholder')}
+        maxLength={200}
         className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted focus:outline-none focus:border-accent transition-colors"
       />
       <div>
@@ -313,6 +314,7 @@ function StepWhy({ form, updateForm }: { form: FormState; updateForm: (p: Partia
         onChange={(e) => updateForm({ why: e.target.value })}
         placeholder={t('woop.whyPlaceholder')}
         rows={5}
+        maxLength={2000}
         className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted focus:outline-none focus:border-accent transition-colors resize-none"
       />
       <p className="text-muted text-xs italic">{t('woop.whyFootnote')}</p>
@@ -334,6 +336,7 @@ function StepOutcome({ form, updateForm }: { form: FormState; updateForm: (p: Pa
         onChange={(e) => updateForm({ best_outcome: e.target.value })}
         placeholder={t('woop.outcomePlaceholder')}
         rows={5}
+        maxLength={2000}
         className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted focus:outline-none focus:border-accent transition-colors resize-none"
       />
       <p className="text-muted text-xs italic">{t('woop.outcomeFootnote')}</p>
@@ -367,6 +370,7 @@ function StepObstacles({ form, updateForm }: { form: FormState; updateForm: (p: 
               value={form.obstacles[i]}
               onChange={(e) => setObstacle(i, e.target.value)}
               placeholder={placeholders[i]}
+              maxLength={200}
               className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-foreground placeholder-muted text-sm focus:outline-none focus:border-accent transition-colors"
             />
           </div>
@@ -405,6 +409,7 @@ function StepIfThen({ form, updateForm, filledCount }: { form: FormState; update
                   value={ifThen?.trigger ?? ''}
                   onChange={(e) => setIfThen(i, 'trigger', e.target.value)}
                   placeholder={obs}
+                  maxLength={500}
                   className="w-full mt-1 bg-surface border border-border rounded px-3 py-2 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
@@ -414,6 +419,7 @@ function StepIfThen({ form, updateForm, filledCount }: { form: FormState; update
                   value={ifThen?.action ?? ''}
                   onChange={(e) => setIfThen(i, 'action', e.target.value)}
                   placeholder={t('woop.thenPlaceholder')}
+                  maxLength={500}
                   className="w-full mt-1 bg-surface border border-border rounded px-3 py-2 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
@@ -441,6 +447,7 @@ function StepMicroStep({ form, updateForm }: { form: FormState; updateForm: (p: 
         value={form.microStep}
         onChange={(e) => updateForm({ microStep: e.target.value })}
         placeholder={t('woop.microStepPlaceholder')}
+        maxLength={200}
         className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted focus:outline-none focus:border-accent transition-colors"
       />
       <p className="text-muted text-xs italic">{t('woop.microStepFootnote')}</p>

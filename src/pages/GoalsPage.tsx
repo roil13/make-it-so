@@ -105,6 +105,7 @@ export function GoalsPage() {
             onChange={(e) => setNewStepTitle(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAddMicroStep()}
             placeholder={t('goals.microStepPlaceholder')}
+            maxLength={200}
             className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted focus:outline-none focus:border-accent"
           />
           <div className="flex gap-2 justify-end">

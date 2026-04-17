@@ -31,8 +31,8 @@ export function TodayPage() {
     try {
       await markMicroStepDone(user.id, stepId, today())
       await refetch()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('common.somethingWentWrong'))
+    } catch {
+      setError(t('common.somethingWentWrong'))
     } finally {
       setActionLoading(false)
     }
@@ -45,8 +45,8 @@ export function TodayPage() {
     try {
       await undoMicroStepDone(user.id, stepId, today())
       await refetch()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('common.somethingWentWrong'))
+    } catch {
+      setError(t('common.somethingWentWrong'))
     } finally {
       setActionLoading(false)
     }

@@ -47,6 +47,7 @@ export function DailyPrompt({ existingEntry, onSaved }: DailyPromptProps) {
         onChange={(e) => setText(e.target.value)}
         placeholder={t('journal.promptPlaceholder')}
         rows={3}
+        maxLength={10000}
         className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent transition-colors resize-none"
       />
       <div className="flex items-center justify-between">

@@ -46,8 +46,8 @@ export function PlansPage() {
       })
       setAddModal(false)
       await refetch()
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : t('plans.failedToSave'))
+    } catch {
+      setSaveError(t('plans.failedToSave'))
     } finally {
       setSaving(false)
     }
@@ -118,6 +118,7 @@ export function PlansPage() {
               value={newObstacle}
               onChange={(e) => { setNewObstacle(e.target.value); if (!newTrigger) setNewTrigger(e.target.value) }}
               placeholder={t('plans.obstaclePlaceholder')}
+              maxLength={200}
               className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent"
             />
           </div>
@@ -127,6 +128,7 @@ export function PlansPage() {
               value={newTrigger}
               onChange={(e) => setNewTrigger(e.target.value)}
               placeholder={t('plans.ifPlaceholder')}
+              maxLength={500}
               className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent"
             />
           </div>
@@ -136,6 +138,7 @@ export function PlansPage() {
               value={newAction}
               onChange={(e) => setNewAction(e.target.value)}
               placeholder={t('plans.thenPlaceholder')}
+              maxLength={500}
               className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-foreground text-sm placeholder-muted focus:outline-none focus:border-accent"
             />
           </div>
