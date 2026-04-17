@@ -1,10 +1,12 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { Zap, Eye, EyeOff } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabase/client'
 import { Button } from '../components/shared/Button'
 
 export function ResetPasswordPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -27,11 +29,11 @@ export function ResetPasswordPage() {
     setError('')
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError(t('auth.errorPasswordTooShort'))
       return
     }
     if (password !== confirm) {
-      setError('Passwords do not match')
+      setError(t('auth.passwordNoMatch'))
       return
     }
 
@@ -40,7 +42,7 @@ export function ResetPasswordPage() {
     setLoading(false)
 
     if (err) {
-      setError('Something went wrong. Please try again')
+      setError(t('auth.errorGeneric'))
     } else {
       await supabase.auth.signOut()
       navigate('/auth', { replace: true })
@@ -58,31 +60,31 @@ export function ResetPasswordPage() {
             <Zap className="text-accent" size={28} />
           </div>
           <h1 className="text-foreground font-black text-2xl uppercase tracking-widest">Make it So</h1>
-          <p className="text-muted text-sm mt-1">Shape your reality. Right now.</p>
+          <p className="text-muted text-sm mt-1">{t('auth.appTagline')}</p>
         </div>
 
         <div className="bg-surface border border-border rounded-2xl p-6">
-          <h2 className="text-foreground font-bold text-sm uppercase tracking-widest mb-5">Set New Password</h2>
+          <h2 className="text-foreground font-bold text-sm uppercase tracking-widest mb-5">{t('auth.setNewPassword')}</h2>
 
           {!ready ? (
-            <p className="text-muted text-sm">Verifying your reset link…</p>
+            <p className="text-muted text-sm">{t('auth.verifyingLink')}</p>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-muted text-xs uppercase tracking-widest mb-1">New Password</label>
+                <label className="block text-muted text-xs uppercase tracking-widest mb-1">{t('auth.newPassword')}</label>
                 <div className="relative">
                   <input
                     type={showPw ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className={field + ' pr-9'}
-                    placeholder="Min. 6 characters"
+                    className={field + ' pe-9'}
+                    placeholder={t('auth.minCharsPlaceholder')}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPw((v) => !v)}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+                    className="absolute end-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
                     tabIndex={-1}
                   >
                     {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -91,20 +93,20 @@ export function ResetPasswordPage() {
               </div>
 
               <div>
-                <label className="block text-muted text-xs uppercase tracking-widest mb-1">Confirm Password</label>
+                <label className="block text-muted text-xs uppercase tracking-widest mb-1">{t('auth.confirmPassword')}</label>
                 <div className="relative">
                   <input
                     type={showConfirm ? 'text' : 'password'}
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
                     required
-                    className={field + ' pr-9'}
-                    placeholder="Re-enter your password"
+                    className={field + ' pe-9'}
+                    placeholder={t('auth.reEnterPlaceholder')}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm((v) => !v)}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+                    className="absolute end-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
                     tabIndex={-1}
                   >
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -115,7 +117,7 @@ export function ResetPasswordPage() {
               {error && <p className="text-danger text-sm">{error}</p>}
 
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? 'Saving…' : 'Set Password'}
+                {loading ? t('auth.saving') : t('auth.setPassword')}
               </Button>
             </form>
           )}

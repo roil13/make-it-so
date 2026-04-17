@@ -2,177 +2,69 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../contexts/AuthContext'
 import { useData } from '../contexts/DataContext'
-import { getTopPriority } from '../utils/priority'
-import { markDone, undoMark } from '../services/logService'
-import { markTaskDone, undoTaskDone } from '../services/taskService'
-import { MakeItSoBanner } from '../components/today/MakeItSoBanner'
-import { HabitActionCard } from '../components/today/HabitActionCard'
-import { TaskActionCard } from '../components/today/TaskActionCard'
-import { CompletionRing } from '../components/today/CompletionRing'
-import { IntentionOverlay } from '../components/today/IntentionOverlay'
-import { MilestoneCelebration, MILESTONE_DAYS, getCelebrated, markCelebrated } from '../components/today/MilestoneCelebration'
+import { markMicroStepDone, undoMicroStepDone } from '../services/microStepService'
+import { MicroStepCard } from '../components/today/MicroStepCard'
+import { DailyPrompt } from '../components/journal/DailyPrompt'
 import { Spinner } from '../components/shared/Spinner'
-import { useDailyIntention } from '../hooks/useDailyIntention'
-import { useStreakFreeze } from '../hooks/useStreakFreeze'
-import { useJustStart } from '../hooks/useJustStart'
 import { today } from '../utils/dates'
-import type { Habit, Goal } from '../types'
 
 export function TodayPage() {
+  const { t } = useTranslation()
   const { user } = useAuth()
-  const { habits, goals, todayLogs, projects, tasks, loading, refetch } = useData()
+  const { goals, microSteps, todayLogs, ifThenPlans, todayJournal, loading, refetch } = useData()
   const [actionLoading, setActionLoading] = useState(false)
   const [error, setError] = useState('')
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'he'
-
-  const { hasCommitted, commit } = useDailyIntention()
-  const { canFreeze, usedFreezeToday, recordFreeze } = useStreakFreeze()
-  const justStart = useJustStart()
-
-  const [celebration, setCelebration] = useState<{ habit: Habit; goal: Goal; days: number } | null>(null)
 
   const goalMap = new Map(goals.map((g) => [g.id, g]))
-  const projectMap = new Map(projects.map((p) => [p.id, p]))
+  const doneIds = new Set(todayLogs.map((l) => l.micro_step_id))
+  const activeIfThen = ifThenPlans.filter((p) => p.active).slice(0, 3)
 
-  // Determine available tasks (unblocked by task_order)
-  const availableTasks = tasks.filter((task) => {
-    if (task.status === 'done') return false
-    const project = projectMap.get(task.project_id)
-    if (!project || project.status !== 'active') return false
-    if (project.task_order === 'sequential') {
-      // Only show the first incomplete task in the project
-      const projectTasks = tasks
-        .filter((t) => t.project_id === project.id && t.status !== 'done')
-        .sort((a, b) => a.order_index - b.order_index)
-      return projectTasks[0]?.id === task.id
-    }
-    return true
-  })
+  const doneCount = microSteps.filter((s) => doneIds.has(s.id)).length
+  const totalCount = microSteps.length
+  const allDone = totalCount > 0 && doneCount === totalCount
+  const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
 
-  const topHabit = getTopPriority(habits, goals, todayLogs)
-  const habitsDoneCount = habits.filter((h) => todayLogs.some((l) => l.habit_id === h.id)).length
-  const tasksDoneToday = tasks.filter((t) => t.status === 'done').length
-  const totalItems = habits.length + availableTasks.length + tasksDoneToday
-  const doneItems = habitsDoneCount + tasksDoneToday
-  const allDone = totalItems > 0 && doneItems === totalItems
-
-  async function handleHabitDone(habitId: string) {
+  async function handleDone(stepId: string) {
     if (!user) return
     setActionLoading(true)
     setError('')
     try {
-      await markDone(user.id, habitId, today())
+      await markMicroStepDone(user.id, stepId, today())
       await refetch()
-      // Milestone detection (use updated habits from DataContext after refetch)
-      // We read habits via closure — after refetch the context will have updated values
-      // Use a short microtask delay to let context update
-      setTimeout(() => {
-        const updated = habits.find((h) => h.id === habitId)
-        if (!updated) return
-        const streak = updated.active_streak
-        if (!MILESTONE_DAYS.includes(streak)) return
-        const celebrated = getCelebrated()[habitId] ?? []
-        if (celebrated.includes(streak)) return
-        const goal = goalMap.get(updated.goal_id)
-        if (!goal) return
-        markCelebrated(habitId, streak)
-        setCelebration({ habit: updated, goal, days: streak })
-      }, 300)
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('today.somethingWentWrong'))
+      setError(e instanceof Error ? e.message : t('common.somethingWentWrong'))
     } finally {
       setActionLoading(false)
     }
   }
 
-  async function handleHabitFreeze(habitId: string) {
+  async function handleUndo(stepId: string) {
     if (!user) return
     setActionLoading(true)
     setError('')
     try {
-      await markDone(user.id, habitId, today())
-      recordFreeze(habitId)
+      await undoMicroStepDone(user.id, stepId, today())
       await refetch()
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('today.somethingWentWrong'))
+      setError(e instanceof Error ? e.message : t('common.somethingWentWrong'))
     } finally {
       setActionLoading(false)
     }
   }
 
-  async function handleHabitUndo(habitId: string) {
-    if (!user) return
-    setActionLoading(true)
-    setError('')
-    try {
-      await undoMark(user.id, habitId, today())
-      await refetch()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('today.somethingWentWrong'))
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  async function handleTaskDone(taskId: string) {
-    setActionLoading(true)
-    setError('')
-    try {
-      await markTaskDone(taskId)
-      await refetch()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('today.somethingWentWrong'))
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  async function handleTaskUndo(taskId: string) {
-    setActionLoading(true)
-    setError('')
-    try {
-      await undoTaskDone(taskId)
-      await refetch()
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('today.somethingWentWrong'))
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-64"><Spinner size="lg" /></div>
-  }
-
-  if (!hasCommitted) {
-    return (
-      <IntentionOverlay
-        habits={habits}
-        availableTasks={availableTasks}
-        goals={goalMap}
-        projects={projectMap}
-        onCommit={commit}
-      />
-    )
-  }
-
-  // Show done tasks in today view too
-  const doneTasks = tasks.filter((t) => t.status === 'done')
+  if (loading) return <div className="flex items-center justify-center h-64"><Spinner size="lg" /></div>
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {celebration && (
-        <MilestoneCelebration
-          habit={celebration.habit}
-          goal={celebration.goal}
-          days={celebration.days}
-          onDismiss={() => setCelebration(null)}
-        />
-      )}
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-foreground font-black text-xl uppercase tracking-widest">{t('today.heading')}</h1>
-        <CompletionRing done={doneItems} total={totalItems} />
+        <h1 className="text-foreground font-black text-xl uppercase tracking-widest">{t('today.mission')}</h1>
+        {totalCount > 0 && (
+          <div className="text-end">
+            <p className="text-accent font-black text-2xl leading-none">{pct}%</p>
+            <p className="text-muted text-xs">{doneCount}/{totalCount}</p>
+          </div>
+        )}
       </div>
 
       {error && (
@@ -181,75 +73,77 @@ export function TodayPage() {
         </div>
       )}
 
-      <MakeItSoBanner topHabit={topHabit} allDone={allDone} onDone={handleHabitDone} onJustStart={justStart.start} loading={actionLoading} />
+      {/* All done state */}
+      {allDone && (
+        <div className="bg-success/10 border border-success/30 rounded-xl px-4 py-4 text-center">
+          <p className="text-success font-bold text-sm uppercase tracking-widest">{t('today.missionComplete')}</p>
+          <p className="text-muted text-xs mt-1">{t('today.allDone')}</p>
+        </div>
+      )}
 
-      {habits.length > 0 && (
+      {/* Micro-steps */}
+      {microSteps.length === 0 ? (
+        <div className="bg-surface border border-border rounded-xl p-8 text-center space-y-3">
+          <p className="text-foreground font-bold text-sm uppercase tracking-widest">{t('today.noSteps')}</p>
+          <p className="text-muted text-sm">{t('today.noStepsDesc')}</p>
+        </div>
+      ) : (
         <div className="space-y-2">
-          <p className="text-muted text-xs uppercase tracking-widest">{t('today.allHabits')}</p>
-          {habits.map((habit) => {
-            const goal = goalMap.get(habit.goal_id)
+          <p className="text-muted text-xs uppercase tracking-widest">{t('today.dailyActions')}</p>
+          {microSteps.map((step) => {
+            const goal = goalMap.get(step.goal_id)
             if (!goal) return null
             return (
-              <HabitActionCard
-                key={habit.id}
-                habit={habit}
+              <MicroStepCard
+                key={step.id}
+                step={step}
                 goal={goal}
-                todayLogs={todayLogs}
-                onDone={handleHabitDone}
-                onUndo={handleHabitUndo}
-                onFreeze={handleHabitFreeze}
-                onRefresh={refetch}
-                canFreeze={canFreeze(habit.id)}
-                frozenToday={usedFreezeToday(habit.id)}
-                justStart={justStart}
+                isDone={doneIds.has(step.id)}
                 loading={actionLoading}
-                isRTL={isRTL}
+                onDone={handleDone}
+                onUndo={handleUndo}
               />
             )
           })}
         </div>
       )}
 
-      {(availableTasks.length > 0 || doneTasks.length > 0) && (
+      {/* Active If-Then reminders */}
+      {activeIfThen.length > 0 && (
         <div className="space-y-2">
-          <p className="text-muted text-xs uppercase tracking-widest">{t('today.projectTasks')}</p>
-          {availableTasks.map((task) => {
-            const project = projectMap.get(task.project_id)
-            if (!project) return null
-            const goal = goalMap.get(project.goal_id)
-            if (!goal) return null
-            return (
-              <TaskActionCard
-                key={task.id}
-                task={task}
-                project={project}
-                goal={goal}
-                onDone={handleTaskDone}
-                onUndo={handleTaskUndo}
-                loading={actionLoading}
-                isRTL={isRTL}
-              />
-            )
-          })}
-          {doneTasks.map((task) => {
-            const project = projectMap.get(task.project_id)
-            if (!project) return null
-            const goal = goalMap.get(project.goal_id)
-            if (!goal) return null
-            return (
-              <TaskActionCard
-                key={task.id}
-                task={task}
-                project={project}
-                goal={goal}
-                onDone={handleTaskDone}
-                onUndo={handleTaskUndo}
-                loading={actionLoading}
-                isRTL={isRTL}
-              />
-            )
-          })}
+          <p className="text-muted text-xs uppercase tracking-widest">{t('today.contingencyPlans')}</p>
+          <div className="space-y-2">
+            {activeIfThen.map((plan) => {
+              const goal = goalMap.get(plan.goal_id)
+              return (
+                <div key={plan.id} className="bg-surface border border-border rounded-xl px-4 py-3 space-y-1">
+                  {goal && (
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: goal.color }} />
+                      <p className="text-muted text-xs">{goal.title}</p>
+                    </div>
+                  )}
+                  <p className="text-foreground text-sm">
+                    <span className="text-accent font-bold text-xs uppercase tracking-widest me-1.5">{t('common.if')}</span>
+                    {plan.trigger_condition}
+                  </p>
+                  <p className="text-foreground text-sm">
+                    <span className="text-success font-bold text-xs uppercase tracking-widest me-1.5">{t('common.then')}</span>
+                    {plan.action_plan}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
         </div>
+      )}
+
+      {/* Small wins prompt */}
+      <DailyPrompt existingEntry={todayJournal} onSaved={refetch} />
+
+      {/* Encouragement when nothing is done */}
+      {!allDone && microSteps.length > 0 && doneCount === 0 && (
+        <p className="text-center text-muted text-sm italic">{t('today.encouragement')}</p>
       )}
     </div>
   )

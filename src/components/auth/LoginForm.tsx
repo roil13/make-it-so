@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../../supabase/client'
 import { Button } from '../shared/Button'
 
@@ -7,15 +8,8 @@ interface Props {
   onSwitch: () => void
 }
 
-function friendlyError(msg: string): string {
-  if (msg.includes('Invalid login credentials')) return 'Wrong email or password'
-  if (msg.includes('Email not confirmed')) return 'Check your inbox to confirm your email first'
-  if (msg.includes('User already registered')) return 'An account with this email already exists'
-  if (msg.includes('Password should be')) return 'Password must be at least 6 characters'
-  return 'Something went wrong. Please try again'
-}
-
 export function LoginForm({ onSwitch }: Props) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
@@ -23,6 +17,14 @@ export function LoginForm({ onSwitch }: Props) {
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<'login' | 'reset'>('login')
   const [resetSent, setResetSent] = useState(false)
+
+  function friendlyError(msg: string): string {
+    if (msg.includes('Invalid login credentials')) return t('auth.errorWrongCredentials')
+    if (msg.includes('Email not confirmed')) return t('auth.errorEmailNotConfirmed')
+    if (msg.includes('User already registered')) return t('auth.errorAlreadyRegistered')
+    if (msg.includes('Password should be')) return t('auth.errorPasswordTooShort')
+    return t('auth.errorGeneric')
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -52,24 +54,24 @@ export function LoginForm({ onSwitch }: Props) {
       <div className="space-y-4">
         {resetSent ? (
           <div className="bg-success/10 border border-success/30 rounded-lg px-4 py-3 text-success text-sm">
-            Reset link sent! Check your inbox for <span className="font-bold">{email}</span>.
+            {t('auth.resetLinkSent', { email })}
           </div>
         ) : (
           <form onSubmit={handleReset} className="space-y-4">
-            <p className="text-muted text-sm">Enter your email and we'll send you a reset link.</p>
+            <p className="text-muted text-sm">{t('auth.enterEmailForReset')}</p>
             <div>
-              <label className="block text-muted text-xs uppercase tracking-widest mb-1">Email</label>
+              <label className="block text-muted text-xs uppercase tracking-widest mb-1">{t('auth.email')}</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={field} />
             </div>
             {error && <p className="text-danger text-sm">{error}</p>}
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Sending…' : 'Send Reset Link'}
+              {loading ? t('auth.sendingLink') : t('auth.sendResetLink')}
             </Button>
           </form>
         )}
         <p className="text-center text-muted text-sm">
           <button type="button" onClick={() => { setMode('login'); setResetSent(false); setError('') }} className="text-accent hover:underline">
-            Back to sign in
+            {t('auth.backToSignIn')}
           </button>
         </p>
       </div>
@@ -79,14 +81,14 @@ export function LoginForm({ onSwitch }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-muted text-xs uppercase tracking-widest mb-1">Email</label>
+        <label className="block text-muted text-xs uppercase tracking-widest mb-1">{t('auth.email')}</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={field} />
       </div>
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="block text-muted text-xs uppercase tracking-widest">Password</label>
+          <label className="block text-muted text-xs uppercase tracking-widest">{t('auth.password')}</label>
           <button type="button" onClick={() => setMode('reset')} className="text-muted text-xs hover:text-accent transition-colors">
-            Forgot password?
+            {t('auth.forgotPassword')}
           </button>
         </div>
         <div className="relative">
@@ -95,12 +97,12 @@ export function LoginForm({ onSwitch }: Props) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className={field + ' pr-9'}
+            className={field + ' pe-9'}
           />
           <button
             type="button"
             onClick={() => setShowPw((v) => !v)}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+            className="absolute end-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
             tabIndex={-1}
           >
             {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -109,12 +111,12 @@ export function LoginForm({ onSwitch }: Props) {
       </div>
       {error && <p className="text-danger text-sm">{error}</p>}
       <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Signing in…' : 'Make it So'}
+        {loading ? t('auth.signingIn') : t('auth.makeItSo')}
       </Button>
       <p className="text-center text-muted text-sm">
-        No account?{' '}
+        {t('auth.noAccount')}{' '}
         <button type="button" onClick={onSwitch} className="text-accent hover:underline">
-          Sign up
+          {t('auth.signUp')}
         </button>
       </p>
     </form>

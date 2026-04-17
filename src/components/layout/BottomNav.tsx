@@ -1,22 +1,21 @@
 import { NavLink } from 'react-router-dom'
-import { Zap, Target, BarChart2, Settings, CalendarDays } from 'lucide-react'
+import { Zap, Target, Lightbulb, BookOpen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
+
+const nav = [
+  { to: '/today',   icon: Zap,       labelKey: 'nav.today'   },
+  { to: '/goals',   icon: Target,    labelKey: 'nav.goals'   },
+  { to: '/plans',   icon: Lightbulb, labelKey: 'nav.plans'   },
+  { to: '/journal', icon: BookOpen,  labelKey: 'nav.journal' },
+]
 
 export function BottomNav() {
   const { t } = useTranslation()
 
-  const nav = [
-    { to: '/today',    icon: Zap,          label: t('nav.today') },
-    { to: '/goals',    icon: Target,       label: t('nav.goals') },
-    { to: '/schedule', icon: CalendarDays, label: t('nav.schedule') },
-    { to: '/progress', icon: BarChart2,    label: t('nav.progress') },
-    { to: '/manage',   icon: Settings,     label: t('nav.manage') },
-  ]
-
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface border-t border-border flex md:hidden pb-safe">
-      {nav.map(({ to, icon: Icon, label }) => (
+      {nav.map(({ to, icon: Icon, labelKey }) => (
         <NavLink
           key={to}
           to={to}
@@ -28,7 +27,7 @@ export function BottomNav() {
           }
         >
           <Icon size={20} />
-          <span className="text-[10px] font-bold uppercase tracking-widest">{label}</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest">{t(labelKey)}</span>
         </NavLink>
       ))}
     </nav>

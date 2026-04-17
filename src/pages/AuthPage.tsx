@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Zap } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { LoginForm } from '../components/auth/LoginForm'
 import { SignupForm } from '../components/auth/SignupForm'
 import { useAuth } from '../contexts/AuthContext'
 
 export function AuthPage() {
   const { user, loading } = useAuth()
+  const { t } = useTranslation()
   const [mode, setMode] = useState<'login' | 'signup'>('login')
 
   if (!loading && user) return <Navigate to="/today" replace />
@@ -19,12 +21,12 @@ export function AuthPage() {
             <Zap className="text-accent" size={28} />
           </div>
           <h1 className="text-foreground font-black text-2xl uppercase tracking-widest">Make it So</h1>
-          <p className="text-muted text-sm mt-1">Shape your reality. Right now.</p>
+          <p className="text-muted text-sm mt-1">{t('auth.appTagline')}</p>
         </div>
 
         <div className="bg-surface border border-border rounded-2xl p-6">
           <h2 className="text-foreground font-bold text-sm uppercase tracking-widest mb-5">
-            {mode === 'login' ? 'Sign In' : 'Create Account'}
+            {mode === 'login' ? t('auth.signIn') : t('auth.createAccount')}
           </h2>
           {mode === 'login' ? (
             <LoginForm onSwitch={() => setMode('signup')} />
