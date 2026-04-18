@@ -2,24 +2,26 @@ import { createContext, useContext, useEffect, useState, useCallback, type React
 import { supabase } from '../supabase/client'
 import { useAuth } from './AuthContext'
 import { today } from '../utils/dates'
-import type { Goal, Habit, HabitLog, Project, Task } from '../types'
+import type { Goal, Obstacle, IfThenPlan, MicroStep, MicroStepLog, JournalEntry } from '../types'
 
 interface DataContextValue {
   goals: Goal[]
-  habits: Habit[]
-  todayLogs: HabitLog[]
-  projects: Project[]
-  tasks: Task[]
+  obstacles: Obstacle[]
+  ifThenPlans: IfThenPlan[]
+  microSteps: MicroStep[]
+  todayLogs: MicroStepLog[]
+  todayJournal: JournalEntry | null
   loading: boolean
   refetch: () => Promise<void>
 }
 
 const DataContext = createContext<DataContextValue>({
   goals: [],
-  habits: [],
+  obstacles: [],
+  ifThenPlans: [],
+  microSteps: [],
   todayLogs: [],
-  projects: [],
-  tasks: [],
+  todayJournal: null,
   loading: true,
   refetch: async () => {},
 })
@@ -27,32 +29,36 @@ const DataContext = createContext<DataContextValue>({
 export function DataProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth()
   const [goals, setGoals] = useState<Goal[]>([])
-  const [habits, setHabits] = useState<Habit[]>([])
-  const [todayLogs, setTodayLogs] = useState<HabitLog[]>([])
-  const [projects, setProjects] = useState<Project[]>([])
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [obstacles, setObstacles] = useState<Obstacle[]>([])
+  const [ifThenPlans, setIfThenPlans] = useState<IfThenPlan[]>([])
+  const [microSteps, setMicroSteps] = useState<MicroStep[]>([])
+  const [todayLogs, setTodayLogs] = useState<MicroStepLog[]>([])
+  const [todayJournal, setTodayJournal] = useState<JournalEntry | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchAll = useCallback(async () => {
     if (!user) return
     const todayStr = today()
-    const [goalsRes, habitsRes, logsRes, projectsRes, tasksRes] = await Promise.all([
+    const [goalsRes, obstaclesRes, plansRes, stepsRes, logsRes, journalRes] = await Promise.all([
       supabase.from('goals').select('*').eq('user_id', user.id).order('priority', { ascending: false }),
-      supabase.from('habits').select('*').eq('user_id', user.id).order('priority', { ascending: false }),
-      supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('completed_date', todayStr),
-      supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: true }),
-      supabase.from('tasks').select('*').eq('user_id', user.id).order('order_index', { ascending: true }),
+      supabase.from('obstacles').select('*').eq('user_id', user.id).order('order_index', { ascending: true }),
+      supabase.from('if_then_plans').select('*').eq('user_id', user.id),
+      supabase.from('micro_steps').select('*').eq('user_id', user.id),
+      supabase.from('micro_step_logs').select('*').eq('user_id', user.id).eq('completed_date', todayStr),
+      supabase.from('journal_entries').select('*').eq('user_id', user.id).eq('entry_date', todayStr).maybeSingle(),
     ])
     if (goalsRes.data) setGoals(goalsRes.data)
-    if (habitsRes.data) setHabits(habitsRes.data)
+    if (obstaclesRes.data) setObstacles(obstaclesRes.data)
+    if (plansRes.data) setIfThenPlans(plansRes.data)
+    if (stepsRes.data) setMicroSteps(stepsRes.data)
     if (logsRes.data) setTodayLogs(logsRes.data)
-    if (projectsRes.data) setProjects(projectsRes.data)
-    if (tasksRes.data) setTasks(tasksRes.data)
+    setTodayJournal(journalRes.data ?? null)
   }, [user])
 
   useEffect(() => {
     if (!user) {
-      setGoals([]); setHabits([]); setTodayLogs([]); setProjects([]); setTasks([]); setLoading(false)
+      setGoals([]); setObstacles([]); setIfThenPlans([]); setMicroSteps([])
+      setTodayLogs([]); setTodayJournal(null); setLoading(false)
       return
     }
 
@@ -66,21 +72,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
         supabase.from('goals').select('*').eq('user_id', user.id).order('priority', { ascending: false })
           .then(({ data }) => { if (data) setGoals(data) })
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'habits', filter: `user_id=eq.${user.id}` }, () => {
-        supabase.from('habits').select('*').eq('user_id', user.id).order('priority', { ascending: false })
-          .then(({ data }) => { if (data) setHabits(data) })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'obstacles', filter: `user_id=eq.${user.id}` }, () => {
+        supabase.from('obstacles').select('*').eq('user_id', user.id).order('order_index', { ascending: true })
+          .then(({ data }) => { if (data) setObstacles(data) })
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'habit_logs', filter: `user_id=eq.${user.id}` }, () => {
-        supabase.from('habit_logs').select('*').eq('user_id', user.id).eq('completed_date', todayStr)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'if_then_plans', filter: `user_id=eq.${user.id}` }, () => {
+        supabase.from('if_then_plans').select('*').eq('user_id', user.id)
+          .then(({ data }) => { if (data) setIfThenPlans(data) })
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'micro_steps', filter: `user_id=eq.${user.id}` }, () => {
+        supabase.from('micro_steps').select('*').eq('user_id', user.id)
+          .then(({ data }) => { if (data) setMicroSteps(data) })
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'micro_step_logs', filter: `user_id=eq.${user.id}` }, () => {
+        supabase.from('micro_step_logs').select('*').eq('user_id', user.id).eq('completed_date', todayStr)
           .then(({ data }) => { if (data) setTodayLogs(data) })
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects', filter: `user_id=eq.${user.id}` }, () => {
-        supabase.from('projects').select('*').eq('user_id', user.id).order('created_at', { ascending: true })
-          .then(({ data }) => { if (data) setProjects(data) })
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `user_id=eq.${user.id}` }, () => {
-        supabase.from('tasks').select('*').eq('user_id', user.id).order('order_index', { ascending: true })
-          .then(({ data }) => { if (data) setTasks(data) })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'journal_entries', filter: `user_id=eq.${user.id}` }, () => {
+        supabase.from('journal_entries').select('*').eq('user_id', user.id).eq('entry_date', todayStr).maybeSingle()
+          .then(({ data }) => { setTodayJournal(data ?? null) })
       })
       .subscribe()
 
@@ -88,7 +98,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [user, fetchAll])
 
   return (
-    <DataContext.Provider value={{ goals, habits, todayLogs, projects, tasks, loading, refetch: fetchAll }}>
+    <DataContext.Provider value={{ goals, obstacles, ifThenPlans, microSteps, todayLogs, todayJournal, loading, refetch: fetchAll }}>
       {children}
     </DataContext.Provider>
   )
